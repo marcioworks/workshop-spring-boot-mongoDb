@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.marciosilva.workshopmongo.domain.Post;
 import com.marciosilva.workshopmongo.domain.User;
 import com.marciosilva.workshopmongo.dto.UserDto;
+import com.marciosilva.workshopmongo.resources.util.URL;
 import com.marciosilva.workshopmongo.services.UserService;
 
 @RestController
@@ -64,5 +66,12 @@ public class UserResource {
 	public ResponseEntity<List<Post>> findPosts(@PathVariable String id){
 		User obj = service.findById(id);
 		return ResponseEntity.ok().body((obj.getPosts()));
+	}
+	
+	@RequestMapping(value ="/namesearch",method=RequestMethod.GET)
+	public ResponseEntity<List<User>> findByName(@RequestParam(value="name", defaultValue = "") String name){
+		name = URL.decodeParam(name);
+		List<User> list = service.findByName(name);
+		return ResponseEntity.ok().body(list);
 	}
 }
